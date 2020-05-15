@@ -1,0 +1,21 @@
+{
+  "name": "quickchart-js",
+  "version": "1.0.0",
+  "description": "Javascript client for QuickChart.io",
+  "main": "index.js",
+  "repository": "https://github.com/typpo/quickchart-js",
+  "author": "Ian Webster",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "format": "prettier --single-quote --trailing-comma all --print-width 100 --write \"**/*.js\""
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "javascript-stringify": "^2.0.1"
+  },
+  "devDependencies": {
+    "jest": "^26.0.1",
+    "prettier": "^2.0.5"
+  }
+}
