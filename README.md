@@ -1,5 +1,6 @@
 quickchart js client
 ---
+[![Build Status](https://travis-ci.com/typpo/quickchart-js.svg?branch=master)](https://travis-ci.com/typpo/quickchart-js)
 
 This is a Javascript client for [quickchart.io](https://quickchart.io), a web service for generating static charts.
 
@@ -8,7 +9,7 @@ This is a Javascript client for [quickchart.io](https://quickchart.io), a web se
 If you are using npm:
 
 ```
-npm install quickchart
+npm install quickchart-js
 ```
 
 # Usage
@@ -16,7 +17,7 @@ npm install quickchart
 This library provides a **QuickChart** object.  Import it, instantiate it, and set your [Chart.js](https://www.chartjs.org) config:
 
 ```js
-const QuickChart = require('quickchart');
+const QuickChart = require('quickchart-js');
 
 const myChart = new QuickChart();
 myChart.setConfig({
@@ -104,8 +105,6 @@ Note that short URLs expire after a few days for users of the free service.  You
 Check out the `examples/` directory to see other usage.  Here's a simple test that uses some of the custom parameters:
 
 ```js
-const QuickChart = require('../index');
-
 const qc = new QuickChart();
 
 qc.setConfig({
