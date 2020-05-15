@@ -25,14 +25,21 @@ myChart.setConfig({
 });
 ```
 
-Call `getUrl()` on your quickchart object to get the encoded URL that renders your chart:
+Use `getUrl()` on your quickchart object to get the encoded URL that renders your chart:
 
 ```js
 console.log(myChart.getUrl());
 // Prints:  https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Hello+world%27%2C%27Foo+bar%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Foo%27%2Cdata%3A%5B1%2C2%5D%7D%5D%7D%7D&w=500&h=300&bkg=transparent&f=png
 ```
 
-The URL produces this chart image:
+If you have a large or complicated chart, use `getShortUrl()` on your quickchart object to get a fixed-length URL using the quickchart.io web service:
+```js
+const data = await myChart.getShortUrl();
+console.log(data.url);
+// Prints: https://quickchart.io/chart/render/f-a1d3e804-dfea-442c-88b0-9801b9808401
+```
+
+The URLs produce this chart image:
 
 <img src="https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Hello+world%27%2C%27Foo+bar%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Foo%27%2Cdata%3A%5B1%2C2%5D%7D%5D%7D%7D&w=500&h=300&bkg=transparent&f=png" width=500 />
 
@@ -61,6 +68,36 @@ Sets the background color of the chart.  Any valid HTML color works.  Defaults t
 ### setDevicePixelRatio(ratio: float)
 
 Sets the device pixel ratio of the chart.  This will multiply the number of pixels by the value.  This is usually used for retina displays.  Defaults to 1.0.
+
+## Getting URLs
+
+There are two ways to get a URL for your chart object.
+
+### getUrl(): string
+
+Returns a URL that will display the chart image when loaded.
+
+### getShortUrl(): Promise
+
+Uses the quickchart.io web service to create a fixed-length chart URL that displays the chart image.  The Promise resolves with the following structure:
+
+```js
+{
+  success: bool,
+  url: string,
+}
+```
+
+Here's an example:
+
+```js
+{
+  success: true,
+  url: 'https://quickchart.io/chart/render/f-a1d3e804-dfea-442c-88b0-9801b9808401',
+}
+```
+
+Note that short URLs expire after a few days for users of the free service.  You can [subscribe](https://quickchart.io/pricing/) to keep them around longer.
 
 ## More examples
 
