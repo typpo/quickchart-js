@@ -11,17 +11,11 @@ If you are using npm:
 npm install quickchart
 ```
 
-If you are running Javascript in the browser, include the bundled Javascript.
-
-```
-<script src="https://cdn.quickchart.io/v1/quickchart.min.js"></script>
-```
-
 # Usage
 
 This library provides a **QuickChart** object.  Import it, instantiate it, and set your [Chart.js](https://www.chartjs.org) config:
 
-```
+```js
 const QuickChart = require('quickchart');
 
 const myChart = new QuickChart();
@@ -33,12 +27,14 @@ myChart.setConfig({
 
 Call `getUrl()` on your quickchart object to get the encoded URL that renders your chart:
 
-```
+```js
 console.log(myChart.getUrl());
 // Prints:  https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Hello+world%27%2C%27Foo+bar%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Foo%27%2Cdata%3A%5B1%2C2%5D%7D%5D%7D%7D&w=500&h=300&bkg=transparent&f=png
 ```
 
-![simple chart](https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Hello+world%27%2C%27Foo+bar%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Foo%27%2Cdata%3A%5B1%2C2%5D%7D%5D%7D%7D&w=500&h=300&bkg=transparent&f=png)
+The URL produces this chart image:
+
+<img src="https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Hello+world%27%2C%27Foo+bar%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Foo%27%2Cdata%3A%5B1%2C2%5D%7D%5D%7D%7D&w=500&h=300&bkg=transparent&f=png" width=500 />
 
 ## Customizing your chart
 
@@ -70,7 +66,7 @@ Sets the device pixel ratio of the chart.  This will multiply the number of pixe
 
 Check out the `examples/` directory to see other usage.  Here's a simple test that uses some of the custom parameters:
 
-```
+```js
 const QuickChart = require('../index');
 
 const qc = new QuickChart();
@@ -87,7 +83,7 @@ console.log(qc.getUrl());
 
 Here's a more complicated chart that includes some Javascript:
 
-```
+```js
 qc.setConfig({
   type: 'bar',
   data: {
@@ -121,7 +117,7 @@ console.log(qc.getUrl());
 
 As we customize these charts, the URLs are getting a little long for my liking.  There's a `getShortUrl` function that uses the QuickChart.io web service to generate a short(er), fixed-length URL:
 
-```
+```js
 // Fill the chart with data from 0 to 100
 const data = [...Array(100).keys()];
 qc.setConfig({
