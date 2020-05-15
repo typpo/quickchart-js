@@ -175,7 +175,42 @@ test('getShortUrl for chart, no auth', async () => {
     data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
   });
 
-  await expect(qc.getShortUrl()).resolves.toEqual(mockResp.data);
+  await expect(qc.getShortUrl()).resolves.toEqual(mockResp.data.url);
+  expect(axios.post).toHaveBeenCalled();
+});
+
+test('getShortUrl for chart bad status code', async () => {
+  const mockResp = {
+    status: 502,
+  };
+  axios.post.mockImplementationOnce(() => Promise.resolve(mockResp));
+
+  const qc = new QuickChart();
+  qc.setConfig({
+    type: 'bar',
+    data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+  });
+
+  await expect(qc.getShortUrl()).rejects.toContain('Bad response code');
+  expect(axios.post).toHaveBeenCalled();
+});
+
+test('getShortUrl api failure', async () => {
+  const mockResp = {
+    status: 200,
+    data: {
+      success: false,
+    },
+  };
+  axios.post.mockImplementationOnce(() => Promise.resolve(mockResp));
+
+  const qc = new QuickChart();
+  qc.setConfig({
+    type: 'bar',
+    data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+  });
+
+  await expect(qc.getShortUrl()).rejects.toContain('failure response');
   expect(axios.post).toHaveBeenCalled();
 });
 

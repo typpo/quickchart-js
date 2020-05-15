@@ -104,9 +104,11 @@ class QuickChart {
         .post('https://quickchart.io/chart/create', this.getPostData())
         .then((resp) => {
           if (resp.status !== 200) {
-            reject(`Invalid response code ${resp.status} from chart shorturl endpoint`);
+            reject(`Bad response code ${resp.status} from chart shorturl endpoint`);
+          } else if (!resp.data.success) {
+            reject('Received failure response from chart shorturl endpoint');
           } else {
-            resolve(resp.data);
+            resolve(resp.data.url);
           }
         })
         .catch((err) => {

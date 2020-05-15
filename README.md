@@ -35,8 +35,8 @@ console.log(myChart.getUrl());
 
 If you have a large or complicated chart, use `getShortUrl()` on your quickchart object to get a fixed-length URL using the quickchart.io web service:
 ```js
-const data = await myChart.getShortUrl();
-console.log(data.url);
+const url = await myChart.getShortUrl();
+console.log(url);
 // Prints: https://quickchart.io/chart/render/f-a1d3e804-dfea-442c-88b0-9801b9808401
 ```
 
@@ -80,23 +80,7 @@ Returns a URL that will display the chart image when loaded.
 
 ### getShortUrl(): Promise
 
-Uses the quickchart.io web service to create a fixed-length chart URL that displays the chart image.  The Promise resolves with the following structure:
-
-```js
-{
-  success: bool,
-  url: string,
-}
-```
-
-Here's an example:
-
-```js
-{
-  success: true,
-  url: 'https://quickchart.io/chart/render/f-a1d3e804-dfea-442c-88b0-9801b9808401',
-}
-```
+Uses the quickchart.io web service to create a fixed-length chart URL that displays the chart image.  The Promise resolves with a URL such as `https://quickchart.io/chart/render/f-a1d3e804-dfea-442c-88b0-9801b9808401`.
 
 Note that short URLs expire after a few days for users of the free service.  You can [subscribe](https://quickchart.io/pricing/) to keep them around longer.
 
@@ -162,12 +146,8 @@ qc.setConfig({
 });
 
 async function printShortUrl() {
-  const resp = await qc.getShortUrl();
-  if (!resp.success) {
-    console.log('Something went wrong, could not generate shorturl');
-  } else {
-    console.log(resp.url);
-  }
+  const url = await qc.getShortUrl();
+  console.log(url);
 }
 printShortUrl();
 // https://quickchart.io/chart/render/f-a1d3e804-dfea-442c-88b0-9801b9808401

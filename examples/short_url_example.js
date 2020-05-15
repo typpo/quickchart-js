@@ -15,12 +15,8 @@ console.log(qc.getUrl());
 
 // That's a long URL! Maybe we want a shorter version (requires an HTTP request to QuickChart.io)
 async function printShortUrl() {
-  const resp = await qc.getShortUrl();
-  if (!resp.success) {
-    console.log('Something went wrong, could not generate shorturl');
-  } else {
-    console.log(resp.url);
-  }
+  const url = await qc.getShortUrl();
+  console.log(url);
 }
 printShortUrl();
 // https://quickchart.io/chart/render/f-a1d3e804-dfea-442c-88b0-9801b9808401
