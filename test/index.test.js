@@ -164,7 +164,7 @@ test('getShortUrl for chart, no auth', async () => {
     status: 200,
     data: {
       success: true,
-      url: '"https://quickchart.io/chart/render/9a560ba4-ab71-4d1e-89ea-ce4741e9d232',
+      url: 'https://quickchart.io/chart/render/9a560ba4-ab71-4d1e-89ea-ce4741e9d232',
     },
   };
   axios.post.mockImplementationOnce(() => Promise.resolve(mockResp));
@@ -211,6 +211,23 @@ test('getShortUrl api failure', async () => {
   });
 
   await expect(qc.getShortUrl()).rejects.toContain('failure response');
+  expect(axios.post).toHaveBeenCalled();
+});
+
+test('toBinary, no auth', async () => {
+  const mockResp = {
+    status: 200,
+    data: Buffer.from('bWVvdw==', 'base64'),
+  };
+  axios.post.mockImplementationOnce(() => Promise.resolve(mockResp));
+
+  const qc = new QuickChart();
+  qc.setConfig({
+    type: 'bar',
+    data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+  });
+
+  await expect(qc.toBinary()).resolves.toEqual(mockResp.data);
   expect(axios.post).toHaveBeenCalled();
 });
 

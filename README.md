@@ -70,7 +70,7 @@ Sets the background color of the chart.  Any valid HTML color works.  Defaults t
 
 Sets the device pixel ratio of the chart.  This will multiply the number of pixels by the value.  This is usually used for retina displays.  Defaults to 1.0.
 
-## Getting URLs
+## Getting outputs
 
 There are two ways to get a URL for your chart object.
 
@@ -78,11 +78,19 @@ There are two ways to get a URL for your chart object.
 
 Returns a URL that will display the chart image when loaded.
 
-### getShortUrl(): Promise
+### getShortUrl(): Promise<string>
 
 Uses the quickchart.io web service to create a fixed-length chart URL that displays the chart image.  The Promise resolves with a URL such as `https://quickchart.io/chart/render/f-a1d3e804-dfea-442c-88b0-9801b9808401`.
 
 Note that short URLs expire after a few days for users of the free service.  You can [subscribe](https://quickchart.io/pricing/) to keep them around longer.
+
+### toBinary(): Promise<Buffer>
+
+Creates a binary buffer that contains your chart image.
+
+### toFile(pathOrDescriptor: string): Promise
+
+Creates a file containing your chart image.
 
 ## More examples
 

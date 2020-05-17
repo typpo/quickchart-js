@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const axios = require('axios');
 const { stringify } = require('javascript-stringify');
 
@@ -94,27 +96,38 @@ class QuickChart {
     return postData;
   }
 
-  getShortUrl() {
+  async getShortUrl() {
     if (!this.isValid()) {
       throw new Error('You must call setConfig before getUrl');
     }
 
-    return new Promise((resolve, reject) => {
-      axios
-        .post('https://quickchart.io/chart/create', this.getPostData())
-        .then((resp) => {
-          if (resp.status !== 200) {
-            reject(`Bad response code ${resp.status} from chart shorturl endpoint`);
-          } else if (!resp.data.success) {
-            reject('Received failure response from chart shorturl endpoint');
-          } else {
-            resolve(resp.data.url);
-          }
-        })
-        .catch((err) => {
-          reject(err);
-        });
+    const resp = await axios.post('https://quickchart.io/chart/create', this.getPostData());
+    if (resp.status !== 200) {
+      throw `Bad response code ${resp.status} from chart shorturl endpoint`;
+    } else if (!resp.data.success) {
+      throw 'Received failure response from chart shorturl endpoint';
+    } else {
+      return resp.data.url;
+    }
+  }
+
+  async toBinary() {
+    if (!this.isValid()) {
+      throw new Error('You must call setConfig before getUrl');
+    }
+
+    const resp = await axios.post('https://quickchart.io/chart', this.getPostData(), {
+      responseType: 'arraybuffer',
     });
+    if (resp.status !== 200) {
+      throw `Bad response code ${resp.status} from chart shorturl endpoint`;
+    }
+    return Buffer.from(resp.data, 'binary');
+  }
+
+  async toFile(pathOrDescriptor) {
+    const buf = await this.toBinary();
+    fs.writeFileSync(pathOrDescriptor, buf);
   }
 }
 
