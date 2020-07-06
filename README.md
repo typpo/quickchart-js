@@ -3,7 +3,7 @@ QuickChart for Javascript
 [![npm](https://img.shields.io/npm/v/quickchart-js)](https://www.npmjs.com/package/quickchart-js)
 [![Build Status](https://travis-ci.com/typpo/quickchart-js.svg?branch=master)](https://travis-ci.com/typpo/quickchart-js)
 
-This is a Javascript client for [quickchart.io](https://quickchart.io), a web service for generating static charts.
+This is a Javascript client for [quickchart.io](https://quickchart.io), a web service for generating static charts.  View the main QuickChart repository [here](https://github.com/typpo/quickchart).
 
 # Installation
 
