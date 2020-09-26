@@ -231,6 +231,23 @@ test('toBinary, no auth', async () => {
   expect(axios.post).toHaveBeenCalled();
 });
 
+test('toBinary, no auth', async () => {
+  const mockResp = {
+    status: 200,
+    data: Buffer.from('bWVvdw==', 'base64'),
+  };
+  axios.post.mockImplementationOnce(() => Promise.resolve(mockResp));
+
+  const qc = new QuickChart();
+  qc.setConfig({
+    type: 'bar',
+    data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+  });
+
+  await expect(qc.toDataUrl()).resolves.toEqual('data:image/png;base64,bWVvdw==');
+  expect(axios.post).toHaveBeenCalled();
+});
+
 test('no chart specified throws error', async () => {
   const qc = new QuickChart();
   expect(() => {

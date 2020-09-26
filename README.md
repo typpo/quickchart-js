@@ -89,6 +89,10 @@ Note that short URLs expire after a few days for users of the free service.  You
 
 Creates a binary buffer that contains your chart image.
 
+### toDataUrl(): string
+
+Returns a base 64 data URL beginning with `data:image/png;base64`.
+
 ### toFile(pathOrDescriptor: string): Promise
 
 Creates a file containing your chart image.

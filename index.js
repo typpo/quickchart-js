@@ -125,6 +125,12 @@ class QuickChart {
     return Buffer.from(resp.data, 'binary');
   }
 
+  async toDataUrl() {
+    const buf = await this.toBinary();
+    const b64buf = buf.toString('base64');
+    return `data:image/png;base64,${b64buf}`;
+  }
+
   async toFile(pathOrDescriptor) {
     const buf = await this.toBinary();
     fs.writeFileSync(pathOrDescriptor, buf);
