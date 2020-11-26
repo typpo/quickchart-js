@@ -493,7 +493,7 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/chart.js@^0.0.31":
+"@types/chart.js@^2.9.28":
   version "2.9.28"
   resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.9.28.tgz#75f1a456ee2eace136073c3264da271a27dcdc8a"
   integrity sha512-9YYhsxRngRJb0dkuaU5BezkF+zvvVHnwdRw+rtlahtFb4zqNf9YSgWsOq+dLYeh0fqsWmHUYLR64eNigh02F+w==
