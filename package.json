@@ -13,7 +13,7 @@
     "lint": "tsc"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "javascript-stringify": "^2.0.1"
   },
   "devDependencies": {
