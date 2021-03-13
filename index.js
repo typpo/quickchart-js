@@ -128,7 +128,8 @@ class QuickChart {
   async toDataUrl() {
     const buf = await this.toBinary();
     const b64buf = buf.toString('base64');
-    return `data:image/png;base64,${b64buf}`;
+    const type = this.format === "svg" ? 'svg+xml' : 'png';
+    return `data:image/${type};base64,${b64buf}`;
   }
 
   async toFile(pathOrDescriptor) {
