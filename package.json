@@ -1,6 +1,6 @@
 {
   "name": "quickchart-js",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Javascript client for QuickChart.io",
   "main": "index.js",
   "types": "index.d.ts",
