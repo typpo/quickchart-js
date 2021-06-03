@@ -100,6 +100,9 @@ class QuickChart {
     if (!this.isValid()) {
       throw new Error('You must call setConfig before getUrl');
     }
+    if (this.host !== 'quickchart.io') {
+      throw new Error('Short URLs must use quickchart.io host'); 
+    }
 
     const resp = await axios.post(`${this.baseUrl}/chart/create`, this.getPostData());
     if (resp.status !== 200) {
