@@ -100,8 +100,11 @@ class QuickChart {
     if (!this.isValid()) {
       throw new Error('You must call setConfig before getUrl');
     }
+    if (this.host !== 'quickchart.io') {
+      throw new Error('Short URLs must use quickchart.io host'); 
+    }
 
-    const resp = await axios.post('https://quickchart.io/chart/create', this.getPostData());
+    const resp = await axios.post(`${this.baseUrl}/chart/create`, this.getPostData());
     if (resp.status !== 200) {
       throw `Bad response code ${resp.status} from chart shorturl endpoint`;
     } else if (!resp.data.success) {
@@ -116,7 +119,7 @@ class QuickChart {
       throw new Error('You must call setConfig before getUrl');
     }
 
-    const resp = await axios.post('https://quickchart.io/chart', this.getPostData(), {
+    const resp = await axios.post(`${this.baseUrl}/chart`, this.getPostData(), {
       responseType: 'arraybuffer',
     });
     if (resp.status !== 200) {
