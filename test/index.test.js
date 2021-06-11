@@ -17,6 +17,19 @@ test('basic chart, no auth', () => {
   expect(qc.getUrl()).toContain('h=300');
 });
 
+test('basic chart, string', () => {
+  const qc = new QuickChart();
+  qc.setConfig(`{
+    type: 'bar',
+    data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+  }`);
+
+  expect(qc.getUrl()).toContain('Hello+world');
+  expect(qc.getUrl()).toContain('/chart?');
+  expect(qc.getUrl()).toContain('w=500');
+  expect(qc.getUrl()).toContain('h=300');
+});
+
 test('basic chart, width and height', () => {
   const qc = new QuickChart();
   qc.setConfig({

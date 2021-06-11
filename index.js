@@ -21,7 +21,7 @@ class QuickChart {
   }
 
   setConfig(chartConfig) {
-    this.chart = stringify(chartConfig);
+    this.chart = typeof chartConfig === 'string' ? chartConfig : stringify(chartConfig);
     return this;
   }
 
