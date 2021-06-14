@@ -52,7 +52,7 @@ The URLs produce this chart image:
 
 ## Customizing your chart
 
-### setConfig(chart)
+### setConfig(chart: Object | string)
 
 Use this config to customize the Chart.js config object that defines your chart.  You must set this before generating a URL!
 
@@ -169,4 +169,25 @@ async function printShortUrl() {
 }
 printShortUrl();
 // https://quickchart.io/chart/render/f-a1d3e804-dfea-442c-88b0-9801b9808401
+```
+
+## Using built-in QuickChart functions
+
+QuickChart has builtin functions: `getGradientFill`, `getGradientFillHelper`, and `pattern.draw`.  These functions can be accessed via the `QuickChart` class.  For example:
+
+```
+const qc = new QuickChart();
+qc.setConfig({
+  type: 'bar',
+  data: {
+    labels: ['Hello world', 'Foo bar'],
+    datasets: [
+      {
+        label: 'Foo',
+        data: [1, 2],
+        backgroundColor: QuickChart.getGradientFillHelper('horizontal', ['red', 'green']),
+      },
+    ],
+  },
+});
 ```

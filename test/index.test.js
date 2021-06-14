@@ -30,6 +30,29 @@ test('basic chart, string', () => {
   expect(qc.getUrl()).toContain('h=300');
 });
 
+test('basic chart with gradient', () => {
+  const qc = new QuickChart();
+  qc.setConfig({
+    type: 'bar',
+    data: {
+      labels: ['Hello world', 'Foo bar'],
+      datasets: [
+        {
+          label: 'Foo',
+          data: [1, 2],
+          backgroundColor: QuickChart.getGradientFillHelper('horizontal', ['red', 'green']),
+        },
+      ],
+    },
+  });
+
+  expect(qc.getUrl()).toContain('Hello+world');
+  expect(qc.getUrl()).toContain('/chart?');
+  expect(qc.getUrl()).toContain('w=500');
+  expect(qc.getUrl()).toContain('h=300');
+  expect(qc.getUrl()).toContain('getGradientFillHelper');
+});
+
 test('basic chart, width and height', () => {
   const qc = new QuickChart();
   qc.setConfig({
