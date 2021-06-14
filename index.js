@@ -3,6 +3,13 @@ const fs = require('fs');
 const axios = require('axios');
 const { stringify } = require('javascript-stringify');
 
+const SPECIAL_FUNCTION_REGEX = /['"]__BEGINFUNCTION__(.*?)__ENDFUNCTION__['"]/g;
+
+function doStringify(chartConfig) {
+  const str = stringify(chartConfig);
+  return str.replace(SPECIAL_FUNCTION_REGEX, '$1');
+}
+
 class QuickChart {
   constructor(apiKey, accountId) {
     this.apiKey = apiKey;
@@ -21,7 +28,7 @@ class QuickChart {
   }
 
   setConfig(chartConfig) {
-    this.chart = typeof chartConfig === 'string' ? chartConfig : stringify(chartConfig);
+    this.chart = typeof chartConfig === 'string' ? chartConfig : doStringify(chartConfig);
     return this;
   }
 
@@ -101,7 +108,7 @@ class QuickChart {
       throw new Error('You must call setConfig before getUrl');
     }
     if (this.host !== 'quickchart.io') {
-      throw new Error('Short URLs must use quickchart.io host'); 
+      throw new Error('Short URLs must use quickchart.io host');
     }
 
     const resp = await axios.post(`${this.baseUrl}/chart/create`, this.getPostData());
@@ -131,7 +138,7 @@ class QuickChart {
   async toDataUrl() {
     const buf = await this.toBinary();
     const b64buf = buf.toString('base64');
-    const type = this.format === "svg" ? 'svg+xml' : 'png';
+    const type = this.format === 'svg' ? 'svg+xml' : 'png';
     return `data:image/${type};base64,${b64buf}`;
   }
 
@@ -140,5 +147,24 @@ class QuickChart {
     fs.writeFileSync(pathOrDescriptor, buf);
   }
 }
+
+QuickChart.getGradientFillHelper = function (direction, colors, dimensions) {
+  return `__BEGINFUNCTION__getGradientFillHelper(${JSON.stringify(direction)}, ${JSON.stringify(
+    colors,
+  )}, ${JSON.stringify(dimensions)})__ENDFUNCTION__`;
+};
+
+QuickChart.getGradientFill = function (colorOptions, linearGradient) {
+  return `__BEGINFUNCTION__getGradientFill(${JSON.stringify(colorOptions)}, ${JSON.stringify(
+    linearGradient,
+  )})__ENDFUNCTION__`;
+};
+
+QuickChart.pattern = {};
+QuickChart.pattern.draw = function (shapeType, backgroundColor, patternColor, requestedSize) {
+  return `__BEGINFUNCTION__pattern.draw(${JSON.stringify(shapeType)}, ${JSON.stringify(
+    backgroundColor,
+  )}, ${JSON.stringify(patternColor)}, ${JSON.stringify(requestedSize)})__ENDFUNCTION__`;
+};
 
 module.exports = QuickChart;
