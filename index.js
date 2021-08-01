@@ -160,6 +160,10 @@ QuickChart.getGradientFill = function (colorOptions, linearGradient) {
   )})__ENDFUNCTION__`;
 };
 
+QuickChart.getImageFill = function (url) {
+  return `__BEGINFUNCTION__getImageFill(${JSON.stringify(url)})__ENDFUNCTION__`;
+};
+
 QuickChart.pattern = {};
 QuickChart.pattern.draw = function (shapeType, backgroundColor, patternColor, requestedSize) {
   return `__BEGINFUNCTION__pattern.draw(${JSON.stringify(shapeType)}, ${JSON.stringify(
