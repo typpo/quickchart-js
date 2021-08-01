@@ -173,7 +173,7 @@ printShortUrl();
 
 ## Using built-in QuickChart functions
 
-QuickChart has builtin functions: `getGradientFill`, `getGradientFillHelper`, and `pattern.draw`.  These functions can be accessed via the `QuickChart` class.  For example:
+QuickChart has builtin functions: `getImageFill`, `getGradientFill`, `getGradientFillHelper`, and `pattern.draw`.  These functions can be accessed via the `QuickChart` class.  For example:
 
 ```
 const qc = new QuickChart();
