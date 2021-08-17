@@ -74,12 +74,13 @@ test('basic chart, other params', () => {
     data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
   });
 
-  qc.setBackgroundColor('#000000').setDevicePixelRatio(2.0).setFormat('svg');
+  qc.setBackgroundColor('#000000').setDevicePixelRatio(2.0).setFormat('svg').setVersion('3');
 
   expect(qc.getUrl()).toContain('Hello+world');
   expect(qc.getUrl()).toContain('devicePixelRatio=2');
   expect(qc.getUrl()).toContain('f=svg');
   expect(qc.getUrl()).toContain('bkg=%23000000');
+  expect(qc.getUrl()).toContain('v=3');
 });
 
 test('js chart', () => {
