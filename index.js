@@ -25,6 +25,7 @@ class QuickChart {
     this.devicePixelRatio = 1.0;
     this.backgroundColor = '#ffffff';
     this.format = 'png';
+    this.version = '2.9.4';
   }
 
   setConfig(chartConfig) {
@@ -57,6 +58,11 @@ class QuickChart {
     return this;
   }
 
+  setVersion(version) {
+    this.version = version;
+    return this;
+  }
+
   isValid() {
     if (!this.chart) {
       return false;
@@ -75,17 +81,20 @@ class QuickChart {
     if (this.devicePixelRatio !== 1.0) {
       ret.searchParams.append('devicePixelRatio', this.devicePixelRatio);
     }
-    if (this.backgroundColor !== 1.0) {
+    if (this.backgroundColor) {
       ret.searchParams.append('bkg', this.backgroundColor);
     }
-    if (this.format !== 1.0) {
+    if (this.format) {
       ret.searchParams.append('f', this.format);
+    }
+    if (this.version) {
+      ret.searchParams.append('v', this.version);
     }
     return ret.href;
   }
 
   getPostData() {
-    const { width, height, chart, format, backgroundColor, devicePixelRatio } = this;
+    const { width, height, chart, format, version, backgroundColor, devicePixelRatio } = this;
     const postData = {
       width,
       height,
@@ -93,6 +102,9 @@ class QuickChart {
     };
     if (format) {
       postData.format = format;
+    }
+    if (version) {
+      postData.version = version;
     }
     if (backgroundColor) {
       postData.backgroundColor = backgroundColor;
