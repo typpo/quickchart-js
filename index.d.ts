@@ -15,6 +15,7 @@ declare module 'quickchart-js' {
     public getUrl(): string;
     public getShortUrl(): Promise<string>;
     public toBinary(): Promise<Buffer>;
+    public toDataUrl(): Promise<string>;
     public toFile(
       pathOrDescriptor: string | number | Buffer | URL
     ): Promise<void>;
