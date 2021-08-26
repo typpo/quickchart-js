@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 const axios = require('axios');
 const { stringify } = require('javascript-stringify');
 
@@ -155,6 +153,8 @@ class QuickChart {
   }
 
   async toFile(pathOrDescriptor) {
+    // `require` is here so that the rest of the package works in the browser.
+    const fs = require('fs');
     const buf = await this.toBinary();
     fs.writeFileSync(pathOrDescriptor, buf);
   }
