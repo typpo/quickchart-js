@@ -88,11 +88,23 @@ class QuickChart {
     if (this.version) {
       ret.searchParams.append('v', this.version);
     }
+    if (this.apiKey) {
+      ret.searchParams.append('key', this.apiKey);
+    }
     return ret.href;
   }
 
   getPostData() {
-    const { width, height, chart, format, version, backgroundColor, devicePixelRatio } = this;
+    const {
+      width,
+      height,
+      chart,
+      format,
+      version,
+      backgroundColor,
+      devicePixelRatio,
+      apiKey,
+    } = this;
     const postData = {
       width,
       height,
@@ -109,6 +121,9 @@ class QuickChart {
     }
     if (devicePixelRatio) {
       postData.devicePixelRatio = devicePixelRatio;
+    }
+    if (apiKey) {
+      postData.key = apiKey;
     }
     return postData;
   }
