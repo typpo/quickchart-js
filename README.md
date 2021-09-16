@@ -108,6 +108,10 @@ Uses the quickchart.io web service to create a fixed-length chart URL that displ
 
 Note that short URLs expire after a few days for users of the free service.  You can [subscribe](https://quickchart.io/pricing/) to keep them around longer.
 
+### getSignedUrl(): string
+
+Returns a URL that displays the chart image. It is signed with your user account to bypass rate limitations.
+
 ### toBinary(): Promise<Buffer>
 
 Creates a binary buffer that contains your chart image.

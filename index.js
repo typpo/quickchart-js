@@ -68,7 +68,7 @@ class QuickChart {
     return true;
   }
 
-  getUrl() {
+  getUrlObject() {
     if (!this.isValid()) {
       throw new Error('You must call setConfig before getUrl');
     }
@@ -91,7 +91,28 @@ class QuickChart {
     if (this.apiKey) {
       ret.searchParams.append('key', this.apiKey);
     }
-    return ret.href;
+    return ret;
+  }
+
+  getUrl() {
+    return this.getUrlObject().href;
+  }
+
+  getSignedUrl() {
+    if (!this.accountId || !this.apiKey) {
+      throw new Error(
+        'You must set accountId and apiKey in the QuickChart constructor to use getSignedUrl()',
+      );
+    }
+    const crypto = require('crypto');
+    const urlObj = this.getUrlObject();
+    const chartStr = urlObj.searchParams.get('c');
+
+    const signature = crypto.createHmac('sha256', this.apiKey).update(chartStr).digest('hex');
+    urlObj.searchParams.append('sig', signature);
+    urlObj.searchParams.append('accountId', this.accountId);
+    urlObj.searchParams.delete('key');
+    return urlObj.href;
   }
 
   getPostData() {
