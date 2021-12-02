@@ -1,26 +1,39 @@
 {
   "name": "quickchart-js",
-  "version": "1.4.2",
+  "version": "2.0.0",
   "description": "Javascript client for QuickChart.io",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "build/quickchart.cjs.js",
+  "module": "build/quickchart.esm.js",
+  "browser": "build/quickchart.js",
+  "types": "build/typescript/index.d.ts",
   "repository": "https://github.com/typpo/quickchart-js",
   "author": "Ian Webster",
   "license": "MIT",
+  "prepublish": "yarn build",
   "scripts": {
     "test": "jest --testPathIgnorePatterns=examples/",
-    "format": "prettier --single-quote --trailing-comma all --print-width 100 --write \"**/*.js\"",
-    "lint": "tsc"
+    "format": "prettier --single-quote --trailing-comma all --print-width 100 --write \"**/*.{js,ts}\"",
+    "build": "tsc && yarn build:browser && yarn build:esm && yarn build:cjs",
+    "build:browser": "esbuild src/index.cjs.ts --bundle --sourcemap --external:fs --external:crypto --target=es2015 --global-name=QuickChart --tsconfig=tsconfig.json --outfile=build/quickchart.js",
+    "build:cjs": "esbuild src/index.cjs.ts --bundle --sourcemap --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --outfile=build/quickchart.cjs.js",
+    "build:esm": "esbuild src/index.ts --bundle --sourcemap --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --format=esm --outfile=build/quickchart.esm.js",
+    "build:watch": "esbuild src/index.cjs.ts --watch --bundle --sourcemap --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --outfile=build/quickchart.cjs.js"
   },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "axios": "^0.21.1",
     "javascript-stringify": "^2.0.1"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-typescript": "^7.16.0",
     "@types/chart.js": "^2.9.34",
+    "@types/jest": "^27.0.3",
+    "esbuild": "^0.14.1",
     "jest": "^27.2.4",
-    "prettier": "^2.0.5",
-    "tslint": "^6.1.3",
-    "typescript": "^4.1.2"
+    "prettier": "^2.3.2",
+    "typescript": "^4.3.5"
   }
 }

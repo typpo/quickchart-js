@@ -1,6 +1,6 @@
-const axios = require('axios');
+import axios from 'axios';
 
-const QuickChart = require('../index');
+import QuickChart from '../src/index';
 
 jest.mock('axios');
 
@@ -32,7 +32,7 @@ test('basic chart with auth', () => {
 });
 
 test('basic chart with auth, signed', () => {
-  const qc = new QuickChart('abc123', 12345);
+  const qc = new QuickChart('abc123', '12345');
   qc.setConfig({
     type: 'bar',
     data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
@@ -133,6 +133,7 @@ test('js chart', () => {
         yAxes: [
           {
             ticks: {
+              // @ts-ignore
               callback: function (value) {
                 return '$' + value;
               },
@@ -220,6 +221,7 @@ test('postdata for js chart', () => {
         yAxes: [
           {
             ticks: {
+              // @ts-ignore
               callback: function (value) {
                 return '$' + value;
               },
@@ -253,7 +255,7 @@ test('getShortUrl for chart, no auth', async () => {
       url: 'https://quickchart.io/chart/render/9a560ba4-ab71-4d1e-89ea-ce4741e9d232',
     },
   };
-  axios.post.mockImplementationOnce(() => Promise.resolve(mockResp));
+  (axios.post as jest.Mock).mockImplementationOnce(() => Promise.resolve(mockResp));
 
   const qc = new QuickChart();
   qc.setConfig({
@@ -269,7 +271,7 @@ test('getShortUrl for chart bad status code', async () => {
   const mockResp = {
     status: 502,
   };
-  axios.post.mockImplementationOnce(() => Promise.resolve(mockResp));
+  (axios.post as jest.Mock).mockImplementationOnce(() => Promise.resolve(mockResp));
 
   const qc = new QuickChart();
   qc.setConfig({
@@ -288,7 +290,7 @@ test('getShortUrl api failure', async () => {
       success: false,
     },
   };
-  axios.post.mockImplementationOnce(() => Promise.resolve(mockResp));
+  (axios.post as jest.Mock).mockImplementationOnce(() => Promise.resolve(mockResp));
 
   const qc = new QuickChart();
   qc.setConfig({
@@ -305,7 +307,7 @@ test('toBinary, no auth', async () => {
     status: 200,
     data: Buffer.from('bWVvdw==', 'base64'),
   };
-  axios.post.mockImplementationOnce(() => Promise.resolve(mockResp));
+  (axios.post as jest.Mock).mockImplementationOnce(() => Promise.resolve(mockResp));
 
   const qc = new QuickChart();
   qc.setConfig({
@@ -322,7 +324,7 @@ test('toBinary, no auth', async () => {
     status: 200,
     data: Buffer.from('bWVvdw==', 'base64'),
   };
-  axios.post.mockImplementationOnce(() => Promise.resolve(mockResp));
+  (axios.post as jest.Mock).mockImplementationOnce(() => Promise.resolve(mockResp));
 
   const qc = new QuickChart();
   qc.setConfig({

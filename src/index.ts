@@ -1,15 +1,55 @@
-const axios = require('axios');
-const { stringify } = require('javascript-stringify');
+import axios from 'axios';
+import { stringify } from 'javascript-stringify';
 
-const SPECIAL_FUNCTION_REGEX = /['"]__BEGINFUNCTION__(.*?)__ENDFUNCTION__['"]/g;
+import type { ChartConfiguration } from 'chart.js';
 
-function doStringify(chartConfig) {
+const SPECIAL_FUNCTION_REGEX: RegExp = /['"]__BEGINFUNCTION__(.*?)__ENDFUNCTION__['"]/g;
+
+interface PostData {
+  chart: string;
+  width?: number;
+  height?: number;
+  format?: string;
+  version?: string;
+  backgroundColor?: string;
+  devicePixelRatio?: number;
+  key?: string;
+}
+
+interface GradientFillOption {
+  offset: number;
+  color: string;
+}
+
+interface GradientDimensionOption {
+  width?: number;
+  height?: number;
+}
+
+function doStringify(chartConfig: ChartConfiguration): string | undefined {
   const str = stringify(chartConfig);
+  if (!str) {
+    return undefined;
+  }
   return str.replace(SPECIAL_FUNCTION_REGEX, '$1');
 }
 
 class QuickChart {
-  constructor(apiKey, accountId) {
+  private host: string;
+  private protocol: string;
+  private baseUrl: string;
+  private width: number;
+  private height: number;
+  private devicePixelRatio: number;
+  private backgroundColor: string;
+  private format: string;
+  private version: string;
+
+  private chart?: string;
+  private apiKey?: string;
+  private accountId?: string;
+
+  constructor(apiKey?: string, accountId?: string) {
     this.apiKey = apiKey;
     this.accountId = accountId;
 
@@ -26,58 +66,58 @@ class QuickChart {
     this.version = '2.9.4';
   }
 
-  setConfig(chartConfig) {
+  setConfig(chartConfig: string | ChartConfiguration): QuickChart {
     this.chart = typeof chartConfig === 'string' ? chartConfig : doStringify(chartConfig);
     return this;
   }
 
-  setWidth(width) {
-    this.width = parseInt(width, 10);
+  setWidth(width: number): QuickChart {
+    this.width = width;
     return this;
   }
 
-  setHeight(height) {
-    this.height = parseInt(height, 10);
+  setHeight(height: number): QuickChart {
+    this.height = height;
     return this;
   }
 
-  setBackgroundColor(color) {
+  setBackgroundColor(color: string): QuickChart {
     this.backgroundColor = color;
     return this;
   }
 
-  setDevicePixelRatio(ratio) {
-    this.devicePixelRatio = parseFloat(ratio);
+  setDevicePixelRatio(ratio: number): QuickChart {
+    this.devicePixelRatio = ratio;
     return this;
   }
 
-  setFormat(fmt) {
+  setFormat(fmt: string): QuickChart {
     this.format = fmt;
     return this;
   }
 
-  setVersion(version) {
+  setVersion(version: string): QuickChart {
     this.version = version;
     return this;
   }
 
-  isValid() {
+  isValid(): boolean {
     if (!this.chart) {
       return false;
     }
     return true;
   }
 
-  getUrlObject() {
+  private getUrlObject(): URL {
     if (!this.isValid()) {
       throw new Error('You must call setConfig before getUrl');
     }
     const ret = new URL(`${this.baseUrl}/chart`);
-    ret.searchParams.append('c', this.chart);
-    ret.searchParams.append('w', this.width);
-    ret.searchParams.append('h', this.height);
+    ret.searchParams.append('c', this.chart!);
+    ret.searchParams.append('w', String(this.width));
+    ret.searchParams.append('h', String(this.height));
     if (this.devicePixelRatio !== 1.0) {
-      ret.searchParams.append('devicePixelRatio', this.devicePixelRatio);
+      ret.searchParams.append('devicePixelRatio', String(this.devicePixelRatio));
     }
     if (this.backgroundColor) {
       ret.searchParams.append('bkg', this.backgroundColor);
@@ -94,11 +134,11 @@ class QuickChart {
     return ret;
   }
 
-  getUrl() {
+  getUrl(): string {
     return this.getUrlObject().href;
   }
 
-  getSignedUrl() {
+  getSignedUrl(): string {
     if (!this.accountId || !this.apiKey) {
       throw new Error(
         'You must set accountId and apiKey in the QuickChart constructor to use getSignedUrl()',
@@ -115,21 +155,17 @@ class QuickChart {
     return urlObj.href;
   }
 
-  getPostData() {
-    const {
+  getPostData(): PostData {
+    if (!this.isValid()) {
+      throw new Error('You must call setConfig creating post data');
+    }
+
+    const { width, height, chart, format, version, backgroundColor, devicePixelRatio, apiKey } =
+      this;
+    const postData: PostData = {
       width,
       height,
-      chart,
-      format,
-      version,
-      backgroundColor,
-      devicePixelRatio,
-      apiKey,
-    } = this;
-    const postData = {
-      width,
-      height,
-      chart,
+      chart: chart!,
     };
     if (format) {
       postData.format = format;
@@ -149,7 +185,7 @@ class QuickChart {
     return postData;
   }
 
-  async getShortUrl() {
+  async getShortUrl(): Promise<string> {
     if (!this.isValid()) {
       throw new Error('You must call setConfig before getUrl');
     }
@@ -167,7 +203,7 @@ class QuickChart {
     }
   }
 
-  async toBinary() {
+  async toBinary(): Promise<Buffer> {
     if (!this.isValid()) {
       throw new Error('You must call setConfig before getUrl');
     }
@@ -181,41 +217,54 @@ class QuickChart {
     return Buffer.from(resp.data, 'binary');
   }
 
-  async toDataUrl() {
+  async toDataUrl(): Promise<string> {
     const buf = await this.toBinary();
     const b64buf = buf.toString('base64');
     const type = this.format === 'svg' ? 'svg+xml' : 'png';
     return `data:image/${type};base64,${b64buf}`;
   }
 
-  async toFile(pathOrDescriptor) {
+  async toFile(pathOrDescriptor: string): Promise<void> {
     const fs = require('fs');
     const buf = await this.toBinary();
     fs.writeFileSync(pathOrDescriptor, buf);
   }
+
+  static getGradientFillHelper(
+    direction: string,
+    colors: string[],
+    dimensions?: GradientDimensionOption,
+  ): string {
+    return `__BEGINFUNCTION__getGradientFillHelper(${JSON.stringify(direction)}, ${JSON.stringify(
+      colors,
+    )}, ${JSON.stringify(dimensions)})__ENDFUNCTION__`;
+  }
+
+  static getGradientFill(
+    colorOptions: GradientFillOption[],
+    linearGradient: [number, number, number, number],
+  ): string {
+    return `__BEGINFUNCTION__getGradientFill(${JSON.stringify(colorOptions)}, ${JSON.stringify(
+      linearGradient,
+    )})__ENDFUNCTION__`;
+  }
+
+  static getImageFill(url: string): string {
+    return `__BEGINFUNCTION__getImageFill(${JSON.stringify(url)})__ENDFUNCTION__`;
+  }
+
+  static pattern = {
+    draw: function (
+      shapeType: string,
+      backgroundColor: string,
+      patternColor: string,
+      requestedSize: number,
+    ): string {
+      return `__BEGINFUNCTION__pattern.draw(${JSON.stringify(shapeType)}, ${JSON.stringify(
+        backgroundColor,
+      )}, ${JSON.stringify(patternColor)}, ${JSON.stringify(requestedSize)})__ENDFUNCTION__`;
+    },
+  };
 }
 
-QuickChart.getGradientFillHelper = function (direction, colors, dimensions) {
-  return `__BEGINFUNCTION__getGradientFillHelper(${JSON.stringify(direction)}, ${JSON.stringify(
-    colors,
-  )}, ${JSON.stringify(dimensions)})__ENDFUNCTION__`;
-};
-
-QuickChart.getGradientFill = function (colorOptions, linearGradient) {
-  return `__BEGINFUNCTION__getGradientFill(${JSON.stringify(colorOptions)}, ${JSON.stringify(
-    linearGradient,
-  )})__ENDFUNCTION__`;
-};
-
-QuickChart.getImageFill = function (url) {
-  return `__BEGINFUNCTION__getImageFill(${JSON.stringify(url)})__ENDFUNCTION__`;
-};
-
-QuickChart.pattern = {};
-QuickChart.pattern.draw = function (shapeType, backgroundColor, patternColor, requestedSize) {
-  return `__BEGINFUNCTION__pattern.draw(${JSON.stringify(shapeType)}, ${JSON.stringify(
-    backgroundColor,
-  )}, ${JSON.stringify(patternColor)}, ${JSON.stringify(requestedSize)})__ENDFUNCTION__`;
-};
-
-module.exports = QuickChart;
+export default QuickChart;
