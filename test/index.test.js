@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const QuickChart = require('../index');
+const QuickChart = require('../build/quickchart.cjs');
 
 jest.mock('axios');
 

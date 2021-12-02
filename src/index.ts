@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import axios from 'axios';
 import { stringify } from 'javascript-stringify';
 
@@ -226,6 +224,7 @@ class QuickChart {
   }
 
   async toFile(pathOrDescriptor: string): Promise<void> {
+    const fs = require('fs');
     const buf = await this.toBinary();
     fs.writeFileSync(pathOrDescriptor, buf);
   }
@@ -267,4 +266,5 @@ class QuickChart {
   };
 }
 
-export default QuickChart;
+// https://github.com/evanw/esbuild/issues/1182
+module.exports = QuickChart;

@@ -7,7 +7,7 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "declaration": true,
-    "outDir": "dist"
+    "outDir": "build/typescript"
   },
   "lib": ["es2015"]
 }
