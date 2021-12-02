@@ -198,7 +198,7 @@ printShortUrl();
 
 QuickChart has builtin functions: `getImageFill`, `getGradientFill`, `getGradientFillHelper`, and `pattern.draw`.  These functions can be accessed via the `QuickChart` class.  For example:
 
-```
+```js
 const qc = new QuickChart();
 qc.setConfig({
   type: 'bar',
@@ -213,4 +213,28 @@ qc.setConfig({
     ],
   },
 });
+```
+
+# Building the library
+
+To build this library locally, run:
+
+```
+yarn build
+```
+
+To run tests:
+
+```
+yarn test
+```
+
+If you're editing the library and running examples, you may want to continuously build the library in the background:
+
+```
+yarn build:watch
+
+# ...
+
+node examples/simple_example.js
 ```
