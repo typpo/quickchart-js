@@ -15,7 +15,7 @@ interface PostData {
   version?: string;
   backgroundColor?: string;
   devicePixelRatio?: number;
-  apiKey?: string;
+  key?: string;
 }
 
 interface GradientFillOption {
