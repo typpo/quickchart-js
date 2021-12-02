@@ -50,6 +50,20 @@ The URLs produce this chart image:
 
 <img src="https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Hello+world%27%2C%27Foo+bar%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Foo%27%2Cdata%3A%5B1%2C2%5D%7D%5D%7D%7D&w=500&h=300&bkg=transparent&f=png" width=500 />
 
+## Instantiating the QuickChart object
+
+If you have an account ID and API key, authenticate using the QuickChart constructor:
+
+```js
+const qc = new QuickChart(apiKey, accountId);
+```
+
+To use the free (community) version, leave it blank:
+
+```js
+const qc = new QuickChart();
+```
+
 ## Customizing your chart
 
 ### setConfig(chart: Object | string)
@@ -93,6 +107,10 @@ Returns a URL that will display the chart image when loaded.
 Uses the quickchart.io web service to create a fixed-length chart URL that displays the chart image.  The Promise resolves with a URL such as `https://quickchart.io/chart/render/f-a1d3e804-dfea-442c-88b0-9801b9808401`.
 
 Note that short URLs expire after a few days for users of the free service.  You can [subscribe](https://quickchart.io/pricing/) to keep them around longer.
+
+### getSignedUrl(): string
+
+Returns a URL that displays the chart image. It is signed with your user account to bypass rate limitations.
 
 ### toBinary(): Promise<Buffer>
 

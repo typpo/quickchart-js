@@ -15,6 +15,7 @@ interface PostData {
   version?: string;
   backgroundColor?: string;
   devicePixelRatio?: number;
+  apiKey?: string;
 }
 
 interface GradientFillOption {
@@ -109,7 +110,7 @@ class QuickChart {
     return true;
   }
 
-  getUrl(): string {
+  private getUrlObject(): URL {
     if (!this.isValid()) {
       throw new Error('You must call setConfig before getUrl');
     }
@@ -129,7 +130,31 @@ class QuickChart {
     if (this.version) {
       ret.searchParams.append('v', this.version);
     }
-    return ret.href;
+    if (this.apiKey) {
+      ret.searchParams.append('key', this.apiKey);
+    }
+    return ret;
+  }
+
+  getUrl(): string {
+    return this.getUrlObject().href;
+  }
+
+  getSignedUrl(): string {
+    if (!this.accountId || !this.apiKey) {
+      throw new Error(
+        'You must set accountId and apiKey in the QuickChart constructor to use getSignedUrl()',
+      );
+    }
+    const crypto = require('crypto');
+    const urlObj = this.getUrlObject();
+    const chartStr = urlObj.searchParams.get('c');
+
+    const signature = crypto.createHmac('sha256', this.apiKey).update(chartStr).digest('hex');
+    urlObj.searchParams.append('sig', signature);
+    urlObj.searchParams.append('accountId', this.accountId);
+    urlObj.searchParams.delete('key');
+    return urlObj.href;
   }
 
   getPostData(): PostData {
@@ -137,7 +162,7 @@ class QuickChart {
       throw new Error('You must call setConfig creating post data');
     }
 
-    const { width, height, chart, format, version, backgroundColor, devicePixelRatio } = this;
+    const { width, height, chart, format, version, backgroundColor, devicePixelRatio, apiKey } = this;
     const postData: PostData = {
       width,
       height,
@@ -154,6 +179,9 @@ class QuickChart {
     }
     if (devicePixelRatio) {
       postData.devicePixelRatio = devicePixelRatio;
+    }
+    if (apiKey) {
+      postData.key = apiKey;
     }
     return postData;
   }

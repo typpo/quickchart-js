@@ -17,6 +17,38 @@ test('basic chart, no auth', () => {
   expect(qc.getUrl()).toContain('h=300');
 });
 
+test('basic chart with auth', () => {
+  const qc = new QuickChart('abc123', '12345');
+  qc.setConfig({
+    type: 'bar',
+    data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+  });
+
+  expect(qc.getUrl()).toContain('Hello+world');
+  expect(qc.getUrl()).toContain('/chart?');
+  expect(qc.getUrl()).toContain('w=500');
+  expect(qc.getUrl()).toContain('h=300');
+  expect(qc.getUrl()).toContain('key=abc123');
+});
+
+test('basic chart with auth, signed', () => {
+  const qc = new QuickChart('abc123', 12345);
+  qc.setConfig({
+    type: 'bar',
+    data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+  });
+
+  const url = qc.getSignedUrl();
+  expect(url).toContain('Hello+world');
+  expect(url).toContain('/chart?');
+  expect(url).toContain('w=500');
+  expect(url).toContain('h=300');
+
+  expect(url).not.toContain('key=');
+  expect(url).toContain('accountId=12345');
+  expect(url).toContain('sig=');
+});
+
 test('basic chart, string', () => {
   const qc = new QuickChart();
   qc.setConfig(`{
@@ -129,6 +161,23 @@ test('postdata for basic chart, no auth', () => {
   expect(postData.format).toEqual('png');
   expect(postData.backgroundColor).toEqual('#ffffff');
   expect(postData.devicePixelRatio).toBeCloseTo(1);
+});
+
+test('postdata for basic chart with auth', () => {
+  const qc = new QuickChart('abc123', '12345');
+  qc.setConfig({
+    type: 'bar',
+    data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+  });
+
+  const postData = qc.getPostData();
+  expect(postData.chart).toContain('Hello world');
+  expect(postData.width).toEqual(500);
+  expect(postData.height).toEqual(300);
+  expect(postData.format).toEqual('png');
+  expect(postData.backgroundColor).toEqual('#ffffff');
+  expect(postData.devicePixelRatio).toBeCloseTo(1);
+  expect(postData.key).toEqual('abc123');
 });
 
 test('postdata for basic chart with params', () => {
