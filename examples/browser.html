@@ -1,0 +1,19 @@
+<html>
+<body>
+  <img id="img" src="#" />
+
+  <script src="../build/quickchart.js"></script>
+  <script>
+    const qc = new QuickChart();
+
+    qc.setConfig({
+      type: 'bar',
+      data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+    });
+    qc.setWidth(500).setHeight(300).setBackgroundColor('transparent');
+
+    const url = qc.getUrl();
+    document.getElementById('img').src = url;
+  </script>
+</body>
+</html>
