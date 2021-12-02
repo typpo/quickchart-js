@@ -160,7 +160,8 @@ class QuickChart {
       throw new Error('You must call setConfig creating post data');
     }
 
-    const { width, height, chart, format, version, backgroundColor, devicePixelRatio, apiKey } = this;
+    const { width, height, chart, format, version, backgroundColor, devicePixelRatio, apiKey } =
+      this;
     const postData: PostData = {
       width,
       height,
