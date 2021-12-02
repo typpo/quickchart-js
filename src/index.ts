@@ -233,7 +233,7 @@ class QuickChart {
   static getGradientFillHelper(
     direction: string,
     colors: string[],
-    dimensions: GradientDimensionOption,
+    dimensions?: GradientDimensionOption,
   ): string {
     return `__BEGINFUNCTION__getGradientFillHelper(${JSON.stringify(direction)}, ${JSON.stringify(
       colors,
@@ -267,5 +267,4 @@ class QuickChart {
   };
 }
 
-// https://github.com/evanw/esbuild/issues/1182
-module.exports = QuickChart;
+export default QuickChart;
