@@ -17,8 +17,7 @@
     "build:browser": "esbuild src/index.ts --bundle --sourcemap --external:fs --external:crypto --target=es2015 --global-name=QuickChart --tsconfig=tsconfig.json --outfile=build/quickchart.js",
     "build:cjs": "esbuild src/index.cjs.ts --bundle --sourcemap --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --outfile=build/quickchart.cjs.js",
     "build:esm": "esbuild src/index.ts --bundle --sourcemap --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --format=esm --outfile=build/quickchart.esm.js",
-    "build:watch": "esbuild src/index.ts --bundle --sourcemap --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --watch --outfile=build/quickchart.js",
-    "types": "tsc --watch"
+    "build:watch": "esbuild src/index.cjs.ts --watch --bundle --sourcemap --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --outfile=build/quickchart.cjs.js"
   },
   "files": [
     "dist"

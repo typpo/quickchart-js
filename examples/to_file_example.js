@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const QuickChart = require('../index');
+const QuickChart = require('../build/quickchart.cjs');
 
 const qc = new QuickChart();
 
@@ -15,3 +15,5 @@ async function saveChart() {
   await qc.toFile('/tmp/chart.png');
 }
 saveChart();
+
+console.log('Written to /tmp/chart.png');

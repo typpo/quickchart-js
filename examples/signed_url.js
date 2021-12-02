@@ -1,4 +1,4 @@
-const QuickChart = require('../index');
+const QuickChart = require('../build/quickchart.cjs');
 
 const qc = new QuickChart('abc123', '12345');
 

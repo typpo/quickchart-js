@@ -1,4 +1,4 @@
-const QuickChart = require('../index');
+const QuickChart = require('../build/quickchart.cjs');
 
 const config = {
   type: 'radar',
