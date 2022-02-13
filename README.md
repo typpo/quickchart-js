@@ -28,8 +28,6 @@ myChart.setConfig({
 });
 ```
 
-If you are using ESM modules, import the ESM build directly with: `import QuickChart from "quickchart-js/build/quickchart.esm.js"`
-
 Use `getUrl()` on your quickchart object to get the encoded URL that renders your chart:
 
 ```js
@@ -123,9 +121,9 @@ Creates a binary buffer that contains your chart image.
 
 Returns a base 64 data URL beginning with `data:image/png;base64`.
 
-### toFile(pathOrDescriptor: string): Promise
+### toFile(pathOrDescriptor: PathLike | FileHandle): Promise
 
-Creates a file containing your chart image.
+Given a filepath string or a writable file handle, creates a file containing your chart image.
 
 ## More examples
 

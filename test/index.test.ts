@@ -1,8 +1,6 @@
-import axios from 'axios';
+import fetchMock from 'jest-fetch-mock';
 
 import QuickChart from '../src/index';
-
-jest.mock('axios');
 
 test('basic chart, no auth', () => {
   const qc = new QuickChart();
@@ -249,13 +247,10 @@ test('postdata for js chart', () => {
 
 test('getShortUrl for chart, no auth', async () => {
   const mockResp = {
-    status: 200,
-    data: {
-      success: true,
-      url: 'https://quickchart.io/chart/render/9a560ba4-ab71-4d1e-89ea-ce4741e9d232',
-    },
+    success: true,
+    url: 'https://quickchart.io/chart/render/9a560ba4-ab71-4d1e-89ea-ce4741e9d232',
   };
-  (axios.post as jest.Mock).mockImplementationOnce(() => Promise.resolve(mockResp));
+  fetchMock.mockResponseOnce(JSON.stringify(mockResp));
 
   const qc = new QuickChart();
   qc.setConfig({
@@ -263,15 +258,27 @@ test('getShortUrl for chart, no auth', async () => {
     data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
   });
 
-  await expect(qc.getShortUrl()).resolves.toEqual(mockResp.data.url);
-  expect(axios.post).toHaveBeenCalled();
+  await expect(qc.getShortUrl()).resolves.toEqual(mockResp.url);
+});
+
+test('getShortUrl for chart js error', async () => {
+  fetchMock.mockResponseOnce(() => {
+    throw new Error('Request timed out');
+  });
+
+  const qc = new QuickChart();
+  qc.setConfig({
+    type: 'bar',
+    data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+  });
+
+  await expect(qc.getShortUrl()).rejects.toThrow('Request timed out');
 });
 
 test('getShortUrl for chart bad status code', async () => {
-  const mockResp = {
+  fetchMock.mockResponseOnce('', {
     status: 502,
-  };
-  (axios.post as jest.Mock).mockImplementationOnce(() => Promise.resolve(mockResp));
+  });
 
   const qc = new QuickChart();
   qc.setConfig({
@@ -279,18 +286,32 @@ test('getShortUrl for chart bad status code', async () => {
     data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
   });
 
-  await expect(qc.getShortUrl()).rejects.toContain('Bad response code');
-  expect(axios.post).toHaveBeenCalled();
+  await expect(qc.getShortUrl()).rejects.toThrow('failed with status code');
+});
+
+test('getShortUrl for chart bad status code with error detail', async () => {
+  fetchMock.mockResponseOnce('', {
+    status: 400,
+    headers: {
+      'x-quickchart-error': 'foo bar',
+    },
+  });
+
+  const qc = new QuickChart();
+  qc.setConfig({
+    type: 'bar',
+    data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+  });
+
+  await expect(qc.getShortUrl()).rejects.toThrow('foo bar');
 });
 
 test('getShortUrl api failure', async () => {
-  const mockResp = {
-    status: 200,
-    data: {
+  fetchMock.mockResponseOnce(
+    JSON.stringify({
       success: false,
-    },
-  };
-  (axios.post as jest.Mock).mockImplementationOnce(() => Promise.resolve(mockResp));
+    }),
+  );
 
   const qc = new QuickChart();
   qc.setConfig({
@@ -298,16 +319,14 @@ test('getShortUrl api failure', async () => {
     data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
   });
 
-  await expect(qc.getShortUrl()).rejects.toContain('failure response');
-  expect(axios.post).toHaveBeenCalled();
+  await expect(qc.getShortUrl()).rejects.toThrow('failure response');
+  expect(fetch).toHaveBeenCalled();
 });
 
 test('toBinary, no auth', async () => {
-  const mockResp = {
-    status: 200,
-    data: Buffer.from('bWVvdw==', 'base64'),
-  };
-  (axios.post as jest.Mock).mockImplementationOnce(() => Promise.resolve(mockResp));
+  const mockData = Buffer.from('bWVvdw==', 'base64');
+  // https://github.com/jefflau/jest-fetch-mock/issues/218
+  fetchMock.mockResponseOnce(() => Promise.resolve({ body: mockData as unknown as string }));
 
   const qc = new QuickChart();
   qc.setConfig({
@@ -315,16 +334,13 @@ test('toBinary, no auth', async () => {
     data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
   });
 
-  await expect(qc.toBinary()).resolves.toEqual(mockResp.data);
-  expect(axios.post).toHaveBeenCalled();
+  await expect(qc.toBinary()).resolves.toEqual(mockData);
 });
 
-test('toBinary, no auth', async () => {
-  const mockResp = {
-    status: 200,
-    data: Buffer.from('bWVvdw==', 'base64'),
-  };
-  (axios.post as jest.Mock).mockImplementationOnce(() => Promise.resolve(mockResp));
+test('toDataUrl, no auth', async () => {
+  fetchMock.mockResponseOnce(() =>
+    Promise.resolve({ body: Buffer.from('bWVvdw==', 'base64') as unknown as string }),
+  );
 
   const qc = new QuickChart();
   qc.setConfig({
@@ -333,7 +349,6 @@ test('toBinary, no auth', async () => {
   });
 
   await expect(qc.toDataUrl()).resolves.toEqual('data:image/png;base64,bWVvdw==');
-  expect(axios.post).toHaveBeenCalled();
 });
 
 test('no chart specified throws error', async () => {
