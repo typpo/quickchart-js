@@ -1,6 +1,8 @@
 import fetch from 'cross-fetch';
 import { stringify } from 'javascript-stringify';
 
+import type { PathLike } from 'fs';
+import type { FileHandle } from 'fs/promises';
 import type { ChartConfiguration } from 'chart.js';
 import type { Response } from 'cross-fetch';
 
@@ -239,7 +241,7 @@ class QuickChart {
     return `data:image/${type};base64,${b64buf}`;
   }
 
-  async toFile(pathOrDescriptor: string): Promise<void> {
+  async toFile(pathOrDescriptor: PathLike | FileHandle): Promise<void> {
     const fs = require('fs');
     const buf = await this.toBinary();
     fs.writeFileSync(pathOrDescriptor, buf);
