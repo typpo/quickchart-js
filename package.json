@@ -20,6 +20,7 @@
     "build:watch": "esbuild src/index.cjs.ts --watch --bundle --sourcemap --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --outfile=build/quickchart.cjs.js"
   },
   "dependencies": {
+    "cross-fetch": "^3.1.5",
     "javascript-stringify": "^2.1.0"
   },
   "devDependencies": {

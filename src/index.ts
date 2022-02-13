@@ -1,7 +1,8 @@
-import fetch from 'node-fetch';
+import fetch from 'cross-fetch';
 import { stringify } from 'javascript-stringify';
 
 import type { ChartConfiguration } from 'chart.js';
+import type { Response } from 'cross-fetch';
 
 const SPECIAL_FUNCTION_REGEX: RegExp = /['"]__BEGINFUNCTION__(.*?)__ENDFUNCTION__['"]/g;
 
