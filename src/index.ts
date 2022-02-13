@@ -45,7 +45,7 @@ function postJson(url: string, payload: PostData): Promise<Response> {
 
 class QuickChart {
   private host: string;
-  private protocol: string;
+  private scheme: string;
   private baseUrl: string;
   private width: number;
   private height: number;
@@ -63,8 +63,8 @@ class QuickChart {
     this.accountId = accountId;
 
     this.host = 'quickchart.io';
-    this.protocol = 'https';
-    this.baseUrl = `${this.protocol}://${this.host}`;
+    this.scheme = 'https';
+    this.baseUrl = `${this.scheme}://${this.host}`;
 
     this.chart = undefined;
     this.width = 500;
