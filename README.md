@@ -28,8 +28,6 @@ myChart.setConfig({
 });
 ```
 
-If you are using ESM modules, import the ESM build directly with: `import QuickChart from "quickchart-js/build/quickchart.esm.js"`
-
 Use `getUrl()` on your quickchart object to get the encoded URL that renders your chart:
 
 ```js
