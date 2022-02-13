@@ -20,7 +20,6 @@
     "build:watch": "esbuild src/index.cjs.ts --watch --bundle --sourcemap --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --outfile=build/quickchart.cjs.js"
   },
   "dependencies": {
-    "axios": "^0.24.0",
     "javascript-stringify": "^2.1.0"
   },
   "devDependencies": {
@@ -30,7 +29,15 @@
     "@types/jest": "^27.0.3",
     "esbuild": "^0.14.1",
     "jest": "^27.4.3",
+    "jest-fetch-mock": "^3.0.3",
     "prettier": "^2.3.2",
     "typescript": "^4.5.2"
+  },
+  "jest": {
+    "automock": false,
+    "resetMocks": false,
+    "setupFiles": [
+      "./test/setupJest.js"
+    ]
   }
 }

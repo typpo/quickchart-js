@@ -1,4 +1,4 @@
-import axios from 'axios';
+import fetch from 'node-fetch';
 import { stringify } from 'javascript-stringify';
 
 import type { ChartConfiguration } from 'chart.js';
@@ -32,6 +32,14 @@ function doStringify(chartConfig: ChartConfiguration): string | undefined {
     return undefined;
   }
   return str.replace(SPECIAL_FUNCTION_REGEX, '$1');
+}
+
+function postJson(url: string, payload: PostData): Promise<Response> {
+  return fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
 }
 
 class QuickChart {
@@ -193,13 +201,18 @@ class QuickChart {
       throw new Error('Short URLs must use quickchart.io host');
     }
 
-    const resp = await axios.post(`${this.baseUrl}/chart/create`, this.getPostData());
-    if (resp.status !== 200) {
-      throw `Bad response code ${resp.status} from chart shorturl endpoint`;
-    } else if (!resp.data.success) {
-      throw 'Received failure response from chart shorturl endpoint';
+    const resp = await postJson(`${this.baseUrl}/chart/create`, this.getPostData());
+    if (!resp.ok) {
+      const quickchartError = resp.headers.get('x-quickchart-error');
+      const details = quickchartError ? `\n${quickchartError}` : '';
+      throw new Error(`Chart shorturl creation failed with status code ${resp.status}${details}`);
+    }
+
+    const json = await resp.json();
+    if (!json.success) {
+      throw new Error('Received failure response from chart shorturl endpoint');
     } else {
-      return resp.data.url;
+      return json.url;
     }
   }
 
@@ -208,13 +221,14 @@ class QuickChart {
       throw new Error('You must call setConfig before getUrl');
     }
 
-    const resp = await axios.post(`${this.baseUrl}/chart`, this.getPostData(), {
-      responseType: 'arraybuffer',
-    });
-    if (resp.status !== 200) {
-      throw `Bad response code ${resp.status} from chart shorturl endpoint`;
+    const resp = await postJson(`${this.baseUrl}/chart`, this.getPostData());
+    if (!resp.ok) {
+      const quickchartError = resp.headers.get('x-quickchart-error');
+      const details = quickchartError ? `\n${quickchartError}` : '';
+      throw new Error(`Chart creation failed with status code ${resp.status}${details}`);
     }
-    return Buffer.from(resp.data, 'binary');
+    const data = await resp.arrayBuffer();
+    return Buffer.from(data);
   }
 
   async toDataUrl(): Promise<string> {
