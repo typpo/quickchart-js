@@ -1,11 +1,18 @@
 {
   "name": "quickchart-js",
-  "version": "2.0.3",
+  "version": "3.0.0-rc1",
   "description": "Javascript client for QuickChart.io",
   "main": "build/quickchart.cjs.js",
   "module": "build/quickchart.esm.js",
   "browser": "build/quickchart.js",
   "types": "build/typescript/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./build/quickchart.cjs.js",
+      "import": "./build/quickchart.esm.js",
+      "types": "build/typescript/index.d.ts"
+    }
+  },
   "repository": "https://github.com/typpo/quickchart-js",
   "author": "Ian Webster",
   "license": "MIT",
@@ -14,10 +21,10 @@
     "test": "jest --testPathIgnorePatterns=examples/",
     "format": "prettier --single-quote --trailing-comma all --print-width 100 --write \"**/*.{js,ts}\"",
     "build": "tsc && yarn build:browser && yarn build:esm && yarn build:cjs",
-    "build:browser": "esbuild src/index.cjs.ts --bundle --sourcemap --external:fs --external:crypto --target=es2015 --global-name=QuickChart --tsconfig=tsconfig.json --outfile=build/quickchart.js",
-    "build:cjs": "esbuild src/index.cjs.ts --bundle --sourcemap --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --outfile=build/quickchart.cjs.js",
-    "build:esm": "esbuild src/index.ts --bundle --sourcemap --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --format=esm --outfile=build/quickchart.esm.js",
-    "build:watch": "esbuild src/index.cjs.ts --watch --bundle --sourcemap --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --outfile=build/quickchart.cjs.js"
+    "build:browser": "esbuild src/index.ts --bundle --sourcemap --external:fs --external:crypto --target=es2015 --global-name=QuickChart --tsconfig=tsconfig.json --outfile=build/quickchart.js",
+    "build:cjs": "esbuild src/index.ts --sourcemap --tree-shaking=true --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --outfile=build/quickchart.cjs.js",
+    "build:esm": "esbuild src/index.ts --sourcemap --tree-shaking=true --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --format=esm --outfile=build/quickchart.esm.js",
+    "build:watch": "esbuild src/index.ts --watch --sourcemap --tree-shaking=true --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --outfile=build/quickchart.cjs.js"
   },
   "dependencies": {
     "cross-fetch": "^3.1.5",
