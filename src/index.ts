@@ -209,8 +209,8 @@ class QuickChart {
       throw new Error(`Chart shorturl creation failed with status code ${resp.status}${details}`);
     }
 
-    const json = await resp.json();
-    if (!json.success) {
+    const json = (await resp.json()) as undefined | { success?: boolean; url?: string };
+    if (!json || !json.success || !json.url) {
       throw new Error('Received failure response from chart shorturl endpoint');
     } else {
       return json.url;
