@@ -3,13 +3,13 @@
   "version": "3.0.0-rc2",
   "description": "Javascript client for QuickChart.io",
   "main": "build/quickchart.cjs.js",
-  "module": "build/quickchart.esm.js",
+  "module": "build/quickchart.mjs",
   "browser": "build/quickchart.js",
   "types": "build/typescript/index.d.ts",
   "exports": {
     ".": {
       "require": "./build/quickchart.cjs.js",
-      "import": "./build/quickchart.esm.js",
+      "import": "./build/quickchart.mjs",
       "types": "build/typescript/index.d.ts"
     }
   },
@@ -23,7 +23,7 @@
     "build": "tsc && yarn build:browser && yarn build:esm && yarn build:cjs",
     "build:browser": "esbuild src/index.ts --bundle --sourcemap --external:fs --external:crypto --target=es2015 --global-name=QuickChart --tsconfig=tsconfig.json --footer:js=\"QuickChart = QuickChart.default\" --outfile=build/quickchart.js",
     "build:cjs": "esbuild src/index.ts --format=cjs --sourcemap --tree-shaking=true --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --footer:js=\"module.exports = module.exports.default;\" --outfile=build/quickchart.cjs.js",
-    "build:esm": "esbuild src/index.ts --sourcemap --tree-shaking=true --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --format=esm --outfile=build/quickchart.esm.js",
+    "build:esm": "esbuild src/index.ts --sourcemap --tree-shaking=true --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --format=esm --outfile=build/quickchart.mjs",
     "build:watch": "esbuild src/index.ts --watch --sourcemap --tree-shaking=true --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --footer:js=\"module.exports = module.exports.default;\" --outfile=build/quickchart.cjs.js"
   },
   "dependencies": {
