@@ -1,6 +1,6 @@
 {
   "name": "quickchart-js",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Javascript client for QuickChart.io",
   "main": "build/quickchart.cjs.js",
   "module": "build/quickchart.mjs",
