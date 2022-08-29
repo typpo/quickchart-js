@@ -15,6 +15,21 @@ test('basic chart, no auth', () => {
   expect(qc.getUrl()).toContain('h=300');
 });
 
+test('basic chart with custom host', () => {
+  const qc = new QuickChart();
+  qc.setHost('foo.com');
+  qc.setScheme('http');
+  qc.setConfig({
+    type: 'bar',
+    data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+  });
+
+  expect(qc.getUrl()).toContain('http://foo.com/chart?');
+  expect(qc.getUrl()).toContain('Hello+world');
+  expect(qc.getUrl()).toContain('w=500');
+  expect(qc.getUrl()).toContain('h=300');
+});
+
 test('basic chart with auth', () => {
   const qc = new QuickChart('abc123', '12345');
   qc.setConfig({
