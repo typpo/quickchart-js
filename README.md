@@ -95,6 +95,14 @@ Sets the device pixel ratio of the chart.  This will multiply the number of pixe
 
 Sets the Chart.js version to use (e.g. `2.9.4` or `3.4.0`).  Valid options are shown in the [documentation](https://quickchart.io/documentation/#parameters).
 
+### setHost(host: string)
+
+Sets the host of generated URLs.  `quickchart.io` by default.
+
+### setScheme(scheme: string)
+
+Sets the scheme of generated URLs.  `https` by default.
+
 ## Getting outputs
 
 There are two ways to get a URL for your chart object.
