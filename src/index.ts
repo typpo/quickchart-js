@@ -82,6 +82,16 @@ class QuickChart {
     return this;
   }
 
+  setHost(host: string): QuickChart {
+    this.host = host;
+    return this;
+  }
+
+  setScheme(scheme: string): QuickChart {
+    this.scheme = scheme;
+    return this;
+  }
+
   setWidth(width: number): QuickChart {
     this.width = width;
     return this;
