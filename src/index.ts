@@ -48,7 +48,6 @@ function postJson(url: string, payload: PostData): Promise<Response> {
 class QuickChart {
   private host: string;
   private scheme: string;
-  private baseUrl: string;
   private width: number;
   private height: number;
   private devicePixelRatio: number;
@@ -66,7 +65,6 @@ class QuickChart {
 
     this.host = 'quickchart.io';
     this.scheme = 'https';
-    this.baseUrl = `${this.scheme}://${this.host}`;
 
     this.chart = undefined;
     this.width = 500;
@@ -79,6 +77,16 @@ class QuickChart {
 
   setConfig(chartConfig: string | ChartConfiguration): QuickChart {
     this.chart = typeof chartConfig === 'string' ? chartConfig : doStringify(chartConfig);
+    return this;
+  }
+
+  setHost(host: string): QuickChart {
+    this.host = host;
+    return this;
+  }
+
+  setScheme(scheme: string): QuickChart {
+    this.scheme = scheme;
     return this;
   }
 
@@ -119,11 +127,15 @@ class QuickChart {
     return true;
   }
 
+  private getBaseUrl(): string {
+    return `${this.scheme}://${this.host}`;
+  }
+
   private getUrlObject(): URL {
     if (!this.isValid()) {
       throw new Error('You must call setConfig before getUrl');
     }
-    const ret = new URL(`${this.baseUrl}/chart`);
+    const ret = new URL(`${this.getBaseUrl()}/chart`);
     ret.searchParams.append('c', this.chart!);
     ret.searchParams.append('w', String(this.width));
     ret.searchParams.append('h', String(this.height));
@@ -204,7 +216,7 @@ class QuickChart {
       throw new Error('Short URLs must use quickchart.io host');
     }
 
-    const resp = await postJson(`${this.baseUrl}/chart/create`, this.getPostData());
+    const resp = await postJson(`${this.getBaseUrl()}/chart/create`, this.getPostData());
     if (!resp.ok) {
       const quickchartError = resp.headers.get('x-quickchart-error');
       const details = quickchartError ? `\n${quickchartError}` : '';
@@ -224,7 +236,7 @@ class QuickChart {
       throw new Error('You must call setConfig before getUrl');
     }
 
-    const resp = await postJson(`${this.baseUrl}/chart`, this.getPostData());
+    const resp = await postJson(`${this.getBaseUrl()}/chart`, this.getPostData());
     if (!resp.ok) {
       const quickchartError = resp.headers.get('x-quickchart-error');
       const details = quickchartError ? `\n${quickchartError}` : '';
