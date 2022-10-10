@@ -8,6 +8,8 @@ import type { Response } from 'cross-fetch';
 
 const SPECIAL_FUNCTION_REGEX: RegExp = /['"]__BEGINFUNCTION__(.*?)__ENDFUNCTION__['"]/g;
 
+const USER_AGENT = `quickchart-js/3.1.0`;
+
 interface PostData {
   chart: string;
   width?: number;
@@ -40,7 +42,10 @@ function doStringify(chartConfig: ChartConfiguration): string | undefined {
 function postJson(url: string, payload: PostData): Promise<Response> {
   return fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'User-Agent': USER_AGENT,
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(payload),
   });
 }
@@ -139,6 +144,7 @@ class QuickChart {
     ret.searchParams.append('c', this.chart!);
     ret.searchParams.append('w', String(this.width));
     ret.searchParams.append('h', String(this.height));
+    ret.searchParams.append('ref', 'qc-js');
     if (this.devicePixelRatio !== 1.0) {
       ret.searchParams.append('devicePixelRatio', String(this.devicePixelRatio));
     }
