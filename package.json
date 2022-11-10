@@ -34,9 +34,9 @@
     "javascript-stringify": "^2.1.0"
   },
   "devDependencies": {
-    "@types/chart.js": "^2.9.37",
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-typescript": "^7.16.0",
+    "@types/chart.js": "^2.9.37",
     "@types/jest": "^27.0.3",
     "esbuild": "^0.14.1",
     "jest": "^27.4.3",
