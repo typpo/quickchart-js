@@ -24,7 +24,9 @@
     "build:browser": "esbuild src/index.ts --bundle --sourcemap --external:fs --external:crypto --target=es2015 --global-name=QuickChart --tsconfig=tsconfig.json --footer:js=\"QuickChart = QuickChart.default\" --outfile=build/quickchart.js",
     "build:cjs": "esbuild src/index.ts --format=cjs --sourcemap --tree-shaking=true --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --footer:js=\"module.exports = module.exports.default;\" --outfile=build/quickchart.cjs.js",
     "build:esm": "esbuild src/index.ts --sourcemap --tree-shaking=true --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --format=esm --outfile=build/quickchart.mjs",
-    "build:watch": "esbuild src/index.ts --watch --sourcemap --tree-shaking=true --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --footer:js=\"module.exports = module.exports.default;\" --outfile=build/quickchart.cjs.js"
+    "build:watch": "esbuild src/index.ts --watch --sourcemap --tree-shaking=true --platform=node --target=node10.4 --global-name=QuickChart --tsconfig=tsconfig.json --footer:js=\"module.exports = module.exports.default;\" --outfile=build/quickchart.cjs.js",
+    "prepublishOnly": "yarn build",
+    "publish": "yarn publish"
   },
   "resolutions": {
     "moment": "^2.29.4"
