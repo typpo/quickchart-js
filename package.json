@@ -10,7 +10,7 @@
     ".": {
       "require": "./build/quickchart.cjs.js",
       "import": "./build/quickchart.mjs",
-      "types": "build/typescript/index.d.ts"
+      "types": "./build/typescript/index.d.ts"
     }
   },
   "repository": "https://github.com/typpo/quickchart-js",
