@@ -40,7 +40,7 @@
     "@babel/preset-typescript": "^7.16.0",
     "@types/chart.js": "^2.9.37",
     "@types/jest": "^27.0.3",
-    "esbuild": "^0.14.1",
+    "esbuild": "^0.25.0",
     "jest": "^27.4.3",
     "jest-fetch-mock": "^3.0.3",
     "prettier": "^2.3.2",
