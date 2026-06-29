@@ -13,6 +13,28 @@ test('basic chart, no auth', () => {
   expect(qc.getUrl()).toContain('/chart?');
   expect(qc.getUrl()).toContain('w=500');
   expect(qc.getUrl()).toContain('h=300');
+  expect(qc.getUrl()).toContain('v=4');
+});
+
+test('basic chart with constructor options', () => {
+  const qc = new QuickChart({
+    host: 'foo.com',
+    scheme: 'http',
+    width: 640,
+    height: 480,
+    version: '3',
+    format: 'webp',
+  });
+  qc.setConfig({
+    type: 'bar',
+    data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+  });
+
+  expect(qc.getUrl()).toContain('http://foo.com/chart?');
+  expect(qc.getUrl()).toContain('w=640');
+  expect(qc.getUrl()).toContain('h=480');
+  expect(qc.getUrl()).toContain('v=3');
+  expect(qc.getUrl()).toContain('f=webp');
 });
 
 test('basic chart with custom host', () => {

@@ -8,30 +8,47 @@ import type { Response } from 'cross-fetch';
 
 const SPECIAL_FUNCTION_REGEX: RegExp = /['"]__BEGINFUNCTION__(.*?)__ENDFUNCTION__['"]/g;
 
-const USER_AGENT = `quickchart-js/3.1.0`;
+const USER_AGENT = 'quickchart-js/3.2.0';
 
-interface PostData {
+export type ChartConfig = ChartConfiguration | Record<string, unknown>;
+
+export interface PostData {
   chart: string;
   width?: number;
   height?: number;
-  format?: string;
+  format?: ImageFormat;
   version?: string;
   backgroundColor?: string;
   devicePixelRatio?: number;
   key?: string;
 }
 
-interface GradientFillOption {
+export type ImageFormat = 'png' | 'webp' | 'jpg' | 'jpeg' | 'svg' | 'pdf' | 'base64' | string;
+
+export interface QuickChartOptions {
+  apiKey?: string;
+  accountId?: string;
+  host?: string;
+  scheme?: 'http' | 'https' | string;
+  width?: number;
+  height?: number;
+  devicePixelRatio?: number;
+  backgroundColor?: string;
+  format?: ImageFormat;
+  version?: string;
+}
+
+export interface GradientFillOption {
   offset: number;
   color: string;
 }
 
-interface GradientDimensionOption {
+export interface GradientDimensionOption {
   width?: number;
   height?: number;
 }
 
-function doStringify(chartConfig: ChartConfiguration): string | undefined {
+function doStringify(chartConfig: ChartConfig): string | undefined {
   const str = stringify(chartConfig);
   if (!str) {
     return undefined;
@@ -57,30 +74,35 @@ class QuickChart {
   private height: number;
   private devicePixelRatio: number;
   private backgroundColor: string;
-  private format: string;
+  private format: ImageFormat;
   private version: string;
 
   private chart?: string;
   private apiKey?: string;
   private accountId?: string;
 
-  constructor(apiKey?: string, accountId?: string) {
-    this.apiKey = apiKey;
-    this.accountId = accountId;
+  constructor(apiKeyOrOptions?: string | QuickChartOptions, accountId?: string) {
+    const options =
+      typeof apiKeyOrOptions === 'object' && apiKeyOrOptions !== null
+        ? apiKeyOrOptions
+        : { apiKey: apiKeyOrOptions, accountId };
 
-    this.host = 'quickchart.io';
-    this.scheme = 'https';
+    this.apiKey = options.apiKey;
+    this.accountId = options.accountId;
+
+    this.host = options.host ?? 'quickchart.io';
+    this.scheme = options.scheme ?? 'https';
 
     this.chart = undefined;
-    this.width = 500;
-    this.height = 300;
-    this.devicePixelRatio = 1.0;
-    this.backgroundColor = '#ffffff';
-    this.format = 'png';
-    this.version = '2.9.4';
+    this.width = options.width ?? 500;
+    this.height = options.height ?? 300;
+    this.devicePixelRatio = options.devicePixelRatio ?? 1.0;
+    this.backgroundColor = options.backgroundColor ?? '#ffffff';
+    this.format = options.format ?? 'png';
+    this.version = options.version ?? '4';
   }
 
-  setConfig(chartConfig: string | ChartConfiguration): QuickChart {
+  setConfig(chartConfig: string | ChartConfig): QuickChart {
     this.chart = typeof chartConfig === 'string' ? chartConfig : doStringify(chartConfig);
     return this;
   }
@@ -115,7 +137,7 @@ class QuickChart {
     return this;
   }
 
-  setFormat(fmt: string): QuickChart {
+  setFormat(fmt: ImageFormat): QuickChart {
     this.format = fmt;
     return this;
   }
@@ -186,7 +208,7 @@ class QuickChart {
 
   getPostData(): PostData {
     if (!this.isValid()) {
-      throw new Error('You must call setConfig creating post data');
+      throw new Error('You must call setConfig before creating post data');
     }
 
     const { width, height, chart, format, version, backgroundColor, devicePixelRatio, apiKey } =
@@ -260,9 +282,9 @@ class QuickChart {
   }
 
   async toFile(pathOrDescriptor: PathLike | FileHandle): Promise<void> {
-    const fs = require('fs');
+    const { writeFile } = await import('fs/promises');
     const buf = await this.toBinary();
-    fs.writeFileSync(pathOrDescriptor, buf);
+    await writeFile(pathOrDescriptor, buf);
   }
 
   static getGradientFillHelper(
