@@ -4,7 +4,7 @@ QuickChart for Javascript
 [![npm](https://img.shields.io/npm/dt/quickchart-js)](https://www.npmjs.com/package/quickchart-js)
 [![Build Status](https://travis-ci.com/typpo/quickchart-js.svg?branch=master)](https://travis-ci.com/typpo/quickchart-js)
 
-This is a Javascript client for [quickchart.io](https://quickchart.io), a web service for generating static charts.  View the main QuickChart repository [here](https://github.com/typpo/quickchart).
+This is a modern Javascript client for [quickchart.io](https://quickchart.io), a web service for generating static charts.  View the main QuickChart repository [here](https://github.com/typpo/quickchart).
 
 # Installation
 
@@ -22,6 +22,7 @@ This library provides a **QuickChart** object.  Import it, instantiate it, and s
 const QuickChart = require('quickchart-js');
 
 const myChart = new QuickChart();
+// Defaults to Chart.js v4. Use .setVersion('2') for legacy Chart.js v2 configs.
 myChart.setConfig({
   type: 'bar',
   data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
@@ -32,7 +33,7 @@ Use `getUrl()` on your quickchart object to get the encoded URL that renders you
 
 ```js
 console.log(myChart.getUrl());
-// Prints:  https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Hello+world%27%2C%27Foo+bar%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Foo%27%2Cdata%3A%5B1%2C2%5D%7D%5D%7D%7D&w=500&h=300&bkg=transparent&f=png
+// Prints:  https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Hello+world%27%2C%27Foo+bar%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Foo%27%2Cdata%3A%5B1%2C2%5D%7D%5D%7D%7D&w=500&h=300&bkg=%23ffffff&f=png&v=4
 ```
 
 If you have a large or complicated chart, use `getShortUrl()` on your quickchart object to get a fixed-length URL using the quickchart.io web service:
@@ -44,12 +45,12 @@ console.log(url);
 
 Or write it to disk:
 ```js
-myChart.toFile('/tmp/mychart.png');
+await myChart.toFile('/tmp/mychart.png');
 ```
 
 The URLs produce this chart image:
 
-<img src="https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Hello+world%27%2C%27Foo+bar%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Foo%27%2Cdata%3A%5B1%2C2%5D%7D%5D%7D%7D&w=500&h=300&bkg=transparent&f=png" width=500 />
+<img src="https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Hello+world%27%2C%27Foo+bar%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Foo%27%2Cdata%3A%5B1%2C2%5D%7D%5D%7D%7D&w=500&h=300&bkg=%23ffffff&f=png&v=4" width=500 />
 
 ## Creating a QuickChart object
 
@@ -63,6 +64,19 @@ To use the free (community) version, leave it blank:
 
 ```js
 const qc = new QuickChart();
+```
+
+You can also pass options at construction time:
+
+```js
+const qc = new QuickChart({
+  apiKey,
+  accountId,
+  width: 800,
+  height: 400,
+  version: '4',
+  format: 'webp',
+});
 ```
 
 ## Customizing your chart
@@ -81,7 +95,7 @@ Sets the height of the chart in pixels.  Defaults to 300.
 
 ### setFormat(format: string)
 
-Sets the format of the chart.  Defaults to `png`.  `svg` is also valid.
+Sets the format of the chart.  Defaults to `png`.  Common values include `png`, `webp`, `jpg`, `svg`, and `pdf`.
 
 ### setBackgroundColor(color: string)
 
@@ -93,7 +107,7 @@ Sets the device pixel ratio of the chart.  This will multiply the number of pixe
 
 ### setVersion(version: string)
 
-Sets the Chart.js version to use (e.g. `2.9.4` or `3.4.0`).  Valid options are shown in the [documentation](https://quickchart.io/documentation/#parameters).
+Sets the Chart.js version to use. Defaults to `4` for modern Chart.js configs. Set this to `2`, `2.9.4`, or another supported version when rendering legacy configs. Valid options are shown in the [documentation](https://quickchart.io/documentation/usage/parameters/#version).
 
 ### setHost(host: string)
 
@@ -147,7 +161,7 @@ qc.setConfig({
 qc.setWidth(500).setHeight(300).setBackgroundColor('transparent');
 
 console.log(qc.getUrl());
-// https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Hello+world%27%2C%27Foo+bar%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Foo%27%2Cdata%3A%5B1%2C2%5D%7D%5D%7D%7D&w=500&h=300&bkg=transparent&f=png
+// https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Hello+world%27%2C%27Foo+bar%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Foo%27%2Cdata%3A%5B1%2C2%5D%7D%5D%7D%7D&w=500&h=300&bkg=transparent&f=png&v=4
 ```
 
 Here's a more complicated chart that includes some Javascript:
