@@ -1,14 +1,24 @@
-import fetch from 'cross-fetch';
 import { stringify } from 'javascript-stringify';
 
-import type { PathLike } from 'fs';
-import type { FileHandle } from 'fs/promises';
-import type { ChartConfiguration } from 'chart.js';
-import type { Response } from 'cross-fetch';
+import type { PathLike } from 'node:fs';
+import type { FileHandle } from 'node:fs/promises';
+
+/**
+ * A Chart.js configuration object.
+ *
+ * quickchart-js is intentionally version-agnostic: it serializes whatever
+ * config you provide and lets the QuickChart service render it with the
+ * Chart.js version you select via `setVersion()`. The type is therefore kept
+ * permissive rather than pinned to a specific Chart.js / @types/chart.js
+ * release. If you want stricter typing, import `ChartConfiguration` from
+ * `chart.js` directly and pass it to `setConfig()`.
+ */
+export type ChartConfiguration = Record<string, any>;
 
 const SPECIAL_FUNCTION_REGEX: RegExp = /['"]__BEGINFUNCTION__(.*?)__ENDFUNCTION__['"]/g;
 
-const USER_AGENT = `quickchart-js/3.1.0`;
+const VERSION = '4.0.0';
+const USER_AGENT = `quickchart-js/${VERSION}`;
 
 interface PostData {
   chart: string;
@@ -173,7 +183,7 @@ class QuickChart {
         'You must set accountId and apiKey in the QuickChart constructor to use getSignedUrl()',
       );
     }
-    const crypto = require('crypto');
+    const crypto = require('node:crypto');
     const urlObj = this.getUrlObject();
     const chartStr = urlObj.searchParams.get('c');
 
@@ -260,7 +270,7 @@ class QuickChart {
   }
 
   async toFile(pathOrDescriptor: PathLike | FileHandle): Promise<void> {
-    const fs = require('fs');
+    const fs = require('node:fs');
     const buf = await this.toBinary();
     fs.writeFileSync(pathOrDescriptor, buf);
   }

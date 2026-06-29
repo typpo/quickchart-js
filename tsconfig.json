@@ -1,8 +1,12 @@
 {
   "compilerOptions": {
     "outDir": "build/typescript",
-    "lib": ["es2015", "dom"],
+    "target": "es2020",
+    "module": "es2020",
+    "moduleResolution": "node",
+    "lib": ["es2020", "dom"],
     "declaration": true,
+    "skipLibCheck": true,
     "noUnusedLocals": false,
     "noImplicitAny": true,
     "strictNullChecks": true,
