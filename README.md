@@ -2,30 +2,38 @@ QuickChart for Javascript
 ---
 [![npm](https://img.shields.io/npm/v/quickchart-js)](https://www.npmjs.com/package/quickchart-js)
 [![npm](https://img.shields.io/npm/dt/quickchart-js)](https://www.npmjs.com/package/quickchart-js)
-[![Build Status](https://travis-ci.com/typpo/quickchart-js.svg?branch=master)](https://travis-ci.com/typpo/quickchart-js)
+[![CI](https://github.com/typpo/quickchart-js/actions/workflows/ci.yml/badge.svg)](https://github.com/typpo/quickchart-js/actions/workflows/ci.yml)
 
 This is a Javascript client for [quickchart.io](https://quickchart.io), a web service for generating static charts.  View the main QuickChart repository [here](https://github.com/typpo/quickchart).
 
 # Installation
 
-If you are using npm:
-
 ```
 npm install quickchart-js
 ```
 
+Requires Node.js 18 or newer (the library uses the built-in `fetch`, so there are no runtime HTTP dependencies). It ships with CommonJS, ES module, and browser builds, plus TypeScript type definitions.
+
 # Usage
 
-This library provides a **QuickChart** object.  Import it, instantiate it, and set your [Chart.js](https://www.chartjs.org) config:
+This library provides a **QuickChart** object.  Import it, instantiate it, and set your [Chart.js](https://www.chartjs.org) config.
+
+Using ES modules or TypeScript:
 
 ```js
-const QuickChart = require('quickchart-js');
+import QuickChart from 'quickchart-js';
 
 const myChart = new QuickChart();
 myChart.setConfig({
   type: 'bar',
   data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
 });
+```
+
+Or using CommonJS:
+
+```js
+const QuickChart = require('quickchart-js');
 ```
 
 Use `getUrl()` on your quickchart object to get the encoded URL that renders your chart:
@@ -225,22 +233,28 @@ qc.setConfig({
 
 # Building the library
 
+Install dependencies:
+
+```
+npm install
+```
+
 To build this library locally, run:
 
 ```
-yarn build
+npm run build
 ```
 
 To run tests:
 
 ```
-yarn test
+npm test
 ```
 
 If you're editing the library and running examples, you may want to continuously build the library in the background:
 
 ```
-yarn build:watch
+npm run build:watch
 
 # ...
 
